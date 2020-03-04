@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'AWS Developer: Designing and Developing'
+
+Parameters:
+  Email:
+    Type: String
+    Description: The email address to use for the billing alarm subscription.
+    MinLength: 1
+Resources:
+  BillingAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmActions: [!Ref BillingAlarmTopic]
+      AlarmDescription: An alarm that is triggered when any resources cost any amount.
+      AlarmName: Billing Alarm
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: Currency
+          Value: USD
+      EvaluationPeriods: 1
+      Namespace: AWS/Billing
+      MetricName: EstimatedCharges
+      Period: 60
+      Statistic: Sum
+      Threshold: 0
+  BillingAlarmTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: billing-alarm-topic
+      Tags:
+        - Key: source
+          Value: Pluralsight
+        - Key: Course
+          Value: 'AWS Developer: Designing and Developing'
+        - Key: Topic
+          Value: 'Topic 2: Designing and Developing on AWS'
+        - Key: Section
+          Value: Creating an AWS Billing Alarm
+  BillingAlarmTopicSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint: !Ref Email
+      Protocol: email
+      TopicArn: !Ref BillingAlarmTopic
