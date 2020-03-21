@@ -2,7 +2,8 @@ const AWS = require('aws-sdk')
 
 const RACES_TABLE = 'races'
 
-AWS.config.update({ region: '/* TODO: Add your region */' })
+// AWS.config.update({ region: '/* TODO: Add your region */' })
+AWS.config.update({ region: 'us-east-1' })
 
 const client = new AWS.DynamoDB.DocumentClient()
 
